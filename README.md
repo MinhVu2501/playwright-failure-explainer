@@ -1,24 +1,19 @@
 # Playwright Failure Explainer
 
-Playwright Failure Explainer helps you rerun the current Playwright test file, capture a concise failure summary, and get a plain-language AI explanation directly inside VS Code.
+Playwright Failure Explainer helps you rerun the current Playwright test file, capture a concise test summary, and get a plain-language AI explanation directly inside VS Code.
 
-It is designed for developers who want a faster way to understand why a Playwright test failed without digging through raw output every time.
+It is built for developers who want a faster way to understand Playwright failures without digging through raw terminal output every time.
 
 ## Features
 
 - Run the current Playwright test file from VS Code
 - Stream Playwright output into a dedicated output channel
-- Generate a structured failure summary with:
-  - test name
-  - location
-  - failure type
-  - plain-language meaning
-  - supporting evidence
+- Generate a structured summary for the latest run
 - Show the last stored summary
-- Explain the last summary with AI
+- Explain the last summary with AI in plain language
 - Support multiple AI providers:
   - OpenAI
-  - Anthropic (Claude)
+  - Anthropic
   - OpenRouter
   - Groq
 
@@ -35,15 +30,24 @@ This extension adds the following commands:
 
 - A project that uses Playwright
 - `npx playwright test` must work in your project environment
-- A valid API key for the AI provider you want to use for explanations
+- A valid API key for the AI provider you want to use
+
+## Quick Start
+
+1. Open a Playwright test file such as `*.spec.js`, `*.spec.ts`, `*.test.js`, or `*.test.ts`
+2. In VS Code Settings, choose your AI provider with `playwrightFailureExplainer.aiProvider`
+3. Run `Playwright Failure Explainer: Set AI API Key`
+4. Run `Playwright Failure Explainer: Run Current Test File`
+5. Run `Playwright Failure Explainer: Show Last Summary` to review the stored result
+6. Run `Playwright Failure Explainer: Explain Last Summary` to get an AI explanation
 
 ## How it works
 
-1. Open a Playwright test file such as `*.spec.js`, `*.spec.ts`, `*.test.js`, or `*.test.ts`
-2. Run `Playwright Failure Explainer: Run Current Test File`
-3. If the test fails, the extension stores a structured summary
-4. Run `Playwright Failure Explainer: Show Last Summary` to review it
-5. Run `Playwright Failure Explainer: Explain Last Summary` to get a plain-language AI explanation
+1. The extension runs the active Playwright test file using `npx playwright test <file>`
+2. Output is streamed into the Playwright Failure Explainer output channel
+3. After the run finishes, the extension stores a concise structured summary of the latest result
+4. You can reopen that summary with `Show Last Summary`
+5. You can send that summary to your selected AI provider with `Explain Last Summary`
 
 ## Supported test file types
 
@@ -62,76 +66,122 @@ The extension currently supports these file name patterns:
 
 This extension contributes the following settings:
 
-- `playwrightFailureExplainer.aiProvider`  
-  Selects the AI provider used for explanation. Supported values:
-  - `openai`
-  - `anthropic` for Claude models
-  - `openrouter`
-  - `groq`
+### `playwrightFailureExplainer.aiProvider`
 
-- `playwrightFailureExplainer.aiModel`  
-  Optional model override for the selected provider. Leave this empty to use the extension’s default model for that provider.
+Selects which AI provider is used for explanations.
 
-- `playwrightFailureExplainer.aiBaseUrl`  
-  Optional base URL override for the selected provider.
+Supported values:
 
-- `playwrightFailureExplainer.openaiModel`  
-  Legacy OpenAI setting kept for backward compatibility.
+- `openai`
+- `anthropic`
+- `openrouter`
+- `groq`
 
-## AI Provider Notes
+### `playwrightFailureExplainer.aiModel`
 
-- The selected provider controls which API is called.
-- Your API key is stored securely in VS Code Secret Storage.
-- API keys are stored per provider.
-- If you switch providers, set a key for that provider too.
-- `anthropic` is the provider setting to use for Claude models.
+Optional model override for the selected provider.
 
-## Choosing a valid AI model name
+Leave this empty to use the extension default for that provider.
 
-Model availability can change over time across providers. If AI explanation fails with a `model not found` or `decommissioned` style error, set `playwrightFailureExplainer.aiModel` explicitly in VS Code settings.
+### `playwrightFailureExplainer.aiBaseUrl`
 
-- **OpenAI**: Use an OpenAI-supported model name
-- **Anthropic (Claude)**: Use a Claude model name supported by Anthropic
-- **OpenRouter**: Use the exact model id shown by OpenRouter
-- **Groq**: Use a Groq-supported model id
+Optional base URL override for the selected provider.
+
+### `playwrightFailureExplainer.openaiModel`
+
+Legacy OpenAI setting kept for backward compatibility.
+
+## AI Provider and API Key Notes
+
+- The selected provider controls which API is called
+- API keys are stored securely in VS Code Secret Storage
+- API keys are stored per provider
+- Changing the provider does not automatically reuse a key from another provider
+- If you switch from `groq` to `openai`, you must run `Set AI API Key` again for `openai`
+- `anthropic` is the provider setting used for Claude models
 
 ## Example setup
 
 ### OpenAI
+
 - `playwrightFailureExplainer.aiProvider`: `openai`
 - `playwrightFailureExplainer.aiModel`: leave empty or set a valid OpenAI model
+- Run `Playwright Failure Explainer: Set AI API Key` and paste your OpenAI key
 
-### Anthropic / Claude
+### Anthropic
+
 - `playwrightFailureExplainer.aiProvider`: `anthropic`
-- `playwrightFailureExplainer.aiModel`: leave empty or set a valid Claude model
+- `playwrightFailureExplainer.aiModel`: leave empty or set a valid Anthropic model
+- Run `Playwright Failure Explainer: Set AI API Key` and paste your Anthropic key
 
 ### OpenRouter
+
 - `playwrightFailureExplainer.aiProvider`: `openrouter`
 - `playwrightFailureExplainer.aiModel`: set an exact OpenRouter model id if needed
+- Run `Playwright Failure Explainer: Set AI API Key` and paste your OpenRouter key
 
 ### Groq
+
 - `playwrightFailureExplainer.aiProvider`: `groq`
 - `playwrightFailureExplainer.aiModel`: leave empty or set a valid Groq model id
+- Run `Playwright Failure Explainer: Set AI API Key` and paste your Groq key
+
+## Choosing a valid AI model name
+
+Model availability can change over time across providers. If AI explanation fails with a `model not found`, `unsupported model`, or `decommissioned` style error, set `playwrightFailureExplainer.aiModel` explicitly in VS Code settings.
+
+- **OpenAI**: use a valid OpenAI model name
+- **Anthropic**: use a valid Anthropic model name
+- **OpenRouter**: use the exact model id listed by OpenRouter
+- **Groq**: use a valid Groq model id
+
+## Example workflow
+
+### Passing test
+
+1. Open a Playwright test file
+2. Run `Playwright Failure Explainer: Run Current Test File`
+3. The extension stores a summary of the latest run
+4. Run `Show Last Summary` to review it
+5. Run `Explain Last Summary` if you want an AI explanation of the result
+
+### Failing test
+
+1. Open a failing Playwright test file
+2. Run `Playwright Failure Explainer: Run Current Test File`
+3. The extension stores a structured summary of the failure
+4. Run `Show Last Summary` to inspect the summary
+5. Run `Explain Last Summary` to get a plain-language breakdown of what likely went wrong
 
 ## Known Limitations
 
-- `Run Current Test File` runs the active Playwright test file, not a single test at cursor
-- The last summary is stored in memory for the current extension session
-- If you reload the Extension Development Host, the last stored summary is cleared
-- Model availability depends on the selected provider and may change over time
+- `Run Current Test File` runs the active Playwright test file, not a single test at the cursor
+- The extension stores only the latest summary
+- The last summary is stored for the current extension session
+- If the extension host reloads, the stored summary is cleared
+- Model availability depends on the selected provider and can change over time
 
 ## Known Issues
 
-- If a provider key, model, or base URL is incorrect, AI explanation will fail and the output channel will show the provider error details
-- Some providers may deprecate model names over time, which can require updating `playwrightFailureExplainer.aiModel`
+- If the provider, API key, model, or base URL is incorrect, AI explanation will fail
+- Provider errors are shown in the output channel
+- Some providers may deprecate model names over time, which may require updating `playwrightFailureExplainer.aiModel`
 
 ## Release Notes
+
+### 0.0.2
+
+- Verified local VSIX install flow
+- Verified command activation in VS Code
+- Verified current Playwright test file execution on a real project
+- Verified summary save and show flow
+- Verified AI explanation flow with provider-based API key storage
 
 ### 0.0.1
 
 - Initial MVP release
 - Run current Playwright test file from VS Code
-- Generate structured failure summaries
+- Generate structured test summaries
 - Show last stored summary
 - Explain summaries with AI
-- Support for OpenAI, Anthropic, OpenRouter, and Groq
+- Support OpenAI, Anthropic, OpenRouter, and Groq
