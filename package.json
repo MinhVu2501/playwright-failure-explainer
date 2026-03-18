@@ -1,0 +1,84 @@
+{
+  "name": "playwright-failure-explainer",
+  "publisher": "localdev",
+  "displayName": "playwright-failure-explainer",
+  "description": "Run Playwright tests and turn failure logs into plain-language diagnostics inside VS Code",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:playwrightFailureExplainer.runCurrentTest",
+    "onCommand:playwrightFailureExplainer.showLastSummary",
+    "onCommand:playwrightFailureExplainer.explainLastSummary",
+    "onCommand:playwrightFailureExplainer.setAiApiKey"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "playwrightFailureExplainer.runCurrentTest",
+        "title": "Playwright Failure Explainer: Run Current Test File"
+      },
+      {
+        "command": "playwrightFailureExplainer.showLastSummary",
+        "title": "Playwright Failure Explainer: Show Last Summary"
+      },
+      {
+        "command": "playwrightFailureExplainer.explainLastSummary",
+        "title": "Playwright Failure Explainer: Explain Last Summary"
+      },
+      {
+        "command": "playwrightFailureExplainer.setAiApiKey",
+        "title": "Playwright Failure Explainer: Set AI API Key"
+      }
+    ],
+    "configuration": {
+      "title": "Playwright Failure Explainer",
+      "properties": {
+        "playwrightFailureExplainer.aiProvider": {
+          "type": "string",
+          "enum": [
+            "openai",
+            "anthropic",
+            "openrouter",
+            "groq"
+          ],
+          "default": "openai",
+          "description": "AI provider used to explain the last Playwright summary. Use 'anthropic' for Claude models."
+        },
+        "playwrightFailureExplainer.aiModel": {
+          "type": "string",
+          "default": "",
+          "description": "Model name used for AI explanation."
+        },
+        "playwrightFailureExplainer.aiBaseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Optional base URL override for the selected AI provider."
+        },
+        "playwrightFailureExplainer.openaiModel": {
+          "type": "string",
+          "default": "gpt-4.1-mini",
+          "description": "OpenAI model used for summary explanation."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.110.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "eslint": "^9.39.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
