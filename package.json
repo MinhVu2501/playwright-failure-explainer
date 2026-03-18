@@ -22,7 +22,7 @@
     "diagnostics"
   ],
   "engines": {
-    "vscode": "^1.90.0"
+    "vscode": "^1.110.0"
   },
   "categories": [
     "Testing"
