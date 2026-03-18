@@ -3,7 +3,7 @@
   "publisher": "MinhVu2501",
   "displayName": "Playwright Failure Explainer",
   "description": "Run Playwright test files and turn failure output into plain-language diagnostics inside VS Code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "repository": {
     "type": "git",
