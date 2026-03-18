@@ -1,14 +1,31 @@
 {
   "name": "playwright-failure-explainer",
-  "publisher": "localdev",
-  "displayName": "playwright-failure-explainer",
-  "description": "Run Playwright tests and turn failure logs into plain-language diagnostics inside VS Code",
+  "publisher": "MinhVu2501",
+  "displayName": "Playwright Failure Explainer",
+  "description": "Run Playwright test files and turn failure output into plain-language diagnostics inside VS Code",
   "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MinhVu2501/playwright-failure-explainer.git"
+  },
+  "homepage": "https://github.com/MinhVu2501/playwright-failure-explainer",
+  "bugs": {
+    "url": "https://github.com/MinhVu2501/playwright-failure-explainer/issues"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "test failure",
+    "debugging",
+    "ai",
+    "diagnostics"
+  ],
   "engines": {
     "vscode": "^1.90.0"
   },
   "categories": [
-    "Other"
+    "Testing"
   ],
   "activationEvents": [
     "onCommand:playwrightFailureExplainer.runCurrentTest",
